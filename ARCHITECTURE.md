@@ -2,32 +2,134 @@
 
 ## Overview
 
-Enterprise AI Assistant is planned as a microservices-based RAG platform for enterprise knowledge access. The system will support secure document ingestion, semantic search, conversational AI, and a React-based user experience.
+Enterprise AI Assistant is a microservices-based RAG platform designed for enterprise knowledge access. The system supports secure document ingestion, semantic search, conversational AI, and a React-based user experience.
 
-## Planned Components
+---
 
-- `backend-auth-service`: Authentication, authorization, JWT handling, and role-based access control.
-- `backend-chat-service`: Chat sessions, retrieval orchestration, prompt assembly, and LLM integration.
-- `backend-document-service`: Document upload, parsing, embedding generation, and metadata management.
-- `frontend-react`: User interface for document search, chat, dashboards, and administration.
-- `docker`: Local container definitions and compose files.
-- `kubernetes`: Deployment manifests and service configuration.
-- `docs`: Supporting project documentation.
+## Planned Technology Stack
+
+### Backend
+- Java 17
+- Spring Boot
+- Spring Security
+- JWT
+
+### Frontend
+- React
+- TypeScript
+
+### Database
+- PostgreSQL
+- pgvector
+
+### AI Components
+- OpenAI GPT-4
+- RAG Architecture
+
+### Infrastructure
+- Docker
+- Kubernetes
+- AWS
+
+---
+
+## Core Services
+
+### Authentication Service
+**Path:** `backend-auth-service`
+
+**Responsibilities:**
+- User registration
+- Login
+- JWT token generation
+- Role management
+
+### Document Service
+**Path:** `backend-document-service`
+
+**Responsibilities:**
+- Upload documents
+- Store metadata
+- Search content
+- Document indexing
+
+### Chat Service
+**Path:** `backend-chat-service`
+
+**Responsibilities:**
+- AI interactions
+- Context retrieval
+- Prompt orchestration
+- Response generation
+
+### Frontend Application
+**Path:** `frontend-react`
+
+**Responsibilities:**
+- User dashboard
+- Search interface
+- Chat interface
+- Authentication pages
+
+---
 
 ## Data Flow
 
-1. Users authenticate through the auth service.
-2. Documents are uploaded to the document service.
-3. Text is extracted, chunked, embedded, and stored with metadata.
-4. Users ask questions through the frontend.
-5. The chat service retrieves relevant document chunks and sends context to the selected LLM.
-6. Responses are returned with references and audit logging.
+1. User authenticates via the Authentication Service
+2. User uploads documents through the Document Service
+3. Document text is extracted, chunked, and embedded
+4. Embeddings are stored in PostgreSQL with pgvector
+5. User submits queries through the Frontend
+6. Chat Service retrieves relevant chunks using vector search
+7. Retrieved context is sent to OpenAI GPT-4
+8. Response is returned to the user with document references
+9. All activity is logged for audit purposes
 
-## Technology Direction
+---
 
-- Backend: Java 17, Spring Boot 3, Spring Security
-- Frontend: React 18, TypeScript
-- Data storage: MongoDB and supporting relational/vector storage as needed
-- Cache/session support: Redis
-- Messaging: Kafka
-- Deployment: Docker, Kubernetes, AWS
+## Deployment Architecture
+
+### Local Development
+- Docker Compose orchestrates all services
+- PostgreSQL with pgvector extension for vector search
+- OpenAI API for LLM interactions
+
+### Production (AWS)
+- Kubernetes cluster for container orchestration
+- Amazon RDS for PostgreSQL
+- Amazon EKS for Kubernetes management
+- AWS S3 for document storage
+- AWS Secrets Manager for credential management
+
+---
+
+## Service Communication
+
+- Services communicate via REST APIs
+- Internal service calls are authenticated using JWT tokens
+- API Gateway pattern planned for centralized routing
+
+---
+
+## Design Decisions
+
+| Decision | Rationale |
+|----------|----------|
+| Microservices architecture | Independent scaling, clear service boundaries |
+| PostgreSQL with pgvector | Native vector search without external dependencies |
+| Spring Boot | Java ecosystem, security features, enterprise maturity |
+| React + TypeScript | Strong typing, component reusability, large ecosystem |
+| Docker | Consistent environments across dev/staging/production |
+| Kubernetes | Production-grade orchestration and scaling |
+| AWS | Reliable cloud infrastructure with managed services |
+
+---
+
+## Next Steps (Week 2)
+
+- Finalize architecture design
+- Create API specifications
+- Design PostgreSQL schema
+- Define pgvector indexing strategy
+- Design authentication flow
+- Create Architecture Diagram
