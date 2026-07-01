@@ -1,144 +1,396 @@
 # BankingAI Assistant
 
-AI-powered enterprise RAG platform that enables banking professionals to search, retrieve, summarize, and interact with financial documents.
+Enterprise AI-powered Banking Assistant built using Java Spring Boot Microservices, React, PostgreSQL, OpenAI, and Retrieval-Augmented Generation (RAG).
 
 ---
 
-## Project Overview
+# Project Overview
 
-**Project Name:** BankingAI Assistant  
-**Duration:** 5 Months  
-**Developer:** Vamsi Chowdary Mandhapati  
-**Reporting Period:** Week 1  
+**Project Name:** BankingAI Assistant
 
-### Objective
+**Developer:** Vamsi Chowdary Mandhapati
 
-The goal of BankingAI Assistant is to build an enterprise-grade AI-powered platform that enables banking professionals to search, retrieve, summarize, and interact with financial documents using Retrieval Augmented Generation (RAG), Large Language Models (LLMs), and modern cloud-native technologies.
+**Project Duration:** 5 Months
+
+**Current Phase:** Week 4 – User Management & Microservices Foundation
 
 ---
 
-## Technology Stack
+# Project Objective
 
-### Backend
+BankingAI Assistant is an enterprise-grade AI platform designed to help banking professionals securely search, retrieve, summarize, and interact with financial documents using Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), and cloud-native microservices.
+
+The platform is designed with scalability, security, and maintainability in mind using modern enterprise architecture patterns.
+
+---
+
+# Technology Stack
+
+## Backend
+
 - Java 17
-- Spring Boot
+- Spring Boot 3
 - Spring Security
-- JWT
+- Spring Data JPA
+- Spring Cloud
+- Spring Cloud Gateway
+- Netflix Eureka
+- OpenFeign
+- Maven
 
-### Frontend
+## Frontend
+
 - React
 - TypeScript
+- Material UI
+- Axios
 
-### Database
+## Database
+
 - PostgreSQL
 - pgvector
+- MongoDB (planned)
 
-### AI Components
-- OpenAI GPT-4
-- RAG Architecture
+## AI & GenAI
 
-### Infrastructure
+- OpenAI GPT
+- Retrieval-Augmented Generation (RAG)
+- Vector Search
+- Prompt Engineering
+
+## Infrastructure
+
 - Docker
 - Kubernetes
 - AWS
+- GitHub Actions (planned)
 
 ---
 
-## Project Structure
+# Current Project Structure
 
-| Folder | Purpose |
-|--------|----------|
-| `backend-auth-service` | Authentication and authorization service |
-| `account-service` | Week 4 user registration, login, and profile service |
-| `backend-chat-service` | AI chat functionality and LLM integration |
-| `backend-document-service` | Document ingestion, retrieval, and processing |
-| `frontend-react` | React-based user interface |
-| `docker` | Containerization resources |
-| `kubernetes` | Deployment manifests |
-| `docs` | Project documentation |
-
----
-
-## Documentation
-
-| File | Purpose |
-|------|----------|
-| `README.md` | Project overview and onboarding information |
-| `PROJECT_STATUS.md` | Track project progress and milestones |
-| `ARCHITECTURE.md` | Document system architecture and design decisions |
-| `API_DOCUMENTATION.md` | Define API contracts and endpoint specifications |
-| `CHANGELOG.md` | Track repository changes over time |
+```
+banking-ai-assistant
+│
+├── account-service
+├── auth-service
+├── transaction-service
+├── ai-service
+├── gateway-service
+├── eureka-server
+│
+├── docs
+│
+├── docker
+│
+├── kubernetes
+│
+└── README.md
+```
 
 ---
 
-## Week 1 Summary
+# Architecture
 
-**Status:** Completed  
-**Overall Progress:** 5%  
-**Risk Level:** Low  
-**Blockers:** None  
+```
+                    React Frontend
 
-### Work Completed
-- GitHub repository created
-- Project folder structure established
-- Documentation files created (README, PROJECT_STATUS, ARCHITECTURE, API_DOCUMENTATION, CHANGELOG)
-- Week 1 planning issue created
-- Architectural planning for core services completed
+                           │
 
-### Core Services Identified
-1. **Authentication Service** - User registration, login, JWT token generation, role management
-2. **Document Service** - Document upload, metadata storage, content search, document indexing
-3. **Chat Service** - AI interactions, context retrieval, prompt orchestration, response generation
-4. **Frontend Application** - User dashboard, search interface, chat interface, authentication pages
+                    API Gateway
 
----
+                           │
 
-## Upcoming Weeks
+      -----------------------------------------
 
-- Spring Boot development
-- React development
-- Database implementation
-- OpenAI integration
-- Docker configuration
-- Kubernetes deployment
-- Authentication APIs
-- Document ingestion APIs
+      │           │            │             │
 
----
+ Auth Service  Account    Transaction    AI Service
 
-## Week 4 Progress
+                Service      Service
 
-The User Management Module is implemented in `account-service` with a layered Spring Boot architecture, PostgreSQL persistence, request validation, centralized exception handling, password hashing, OpenAPI documentation, and unit tests.
+      │
 
-### Architecture
+ PostgreSQL
 
-Requests flow from `AuthController` to `UserService`, then to `UserRepository` and PostgreSQL. DTOs define the API contract, the entity package owns persistence models, Spring Security provides password encoding, and the exception layer produces consistent error responses.
+      │
 
-### How to Run
+ OpenAI + RAG
 
-1. Install Java 17, Maven, and PostgreSQL.
-2. Create a PostgreSQL database named `account_db`.
-3. Optionally set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD`.
-4. Run `cd account-service` followed by `mvn spring-boot:run`.
-5. Open Swagger UI at `http://localhost:8081/swagger-ui.html`.
+      │
 
-### REST APIs
-
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| `POST` | `/register` | Register a new user |
-| `POST` | `/login` | Validate user credentials |
-| `GET` | `/profile?email={email}` | Retrieve a user profile |
-
-### Future Work
-
-- Add JWT access and refresh tokens.
-- Require authenticated access to profile endpoints.
-- Add role-based authorization and account lifecycle APIs.
-- Add database migrations and containerized integration tests.
+ Vector Database (Future)
+```
 
 ---
 
-## License
+# Features Implemented
+
+## Week 1
+
+- Project planning
+- Repository setup
+- Folder structure
+- Documentation
+- Architecture planning
+
+---
+
+## Week 2
+
+- High-level system design
+- Database design
+- Authentication workflow
+- Service interaction design
+- Sprint backlog
+
+---
+
+## Week 3
+
+- Multi-module Maven project
+- Spring Boot microservices initialization
+- Eureka Discovery Server
+- API Gateway module
+- Account Service
+- Auth Service
+- AI Service
+- Transaction Service
+- Spring Cloud configuration
+
+---
+
+## Week 4
+
+- User Management module foundation
+- JPA entity design
+- Repository layer
+- Service layer
+- REST controller
+- Exception handling
+- Validation
+- PostgreSQL configuration
+- Swagger/OpenAPI setup
+- Technical documentation updates
+
+---
+
+# Services
+
+## Eureka Server
+
+Responsible for service discovery and registration.
+
+---
+
+## API Gateway
+
+Single entry point for all client requests.
+
+---
+
+## Auth Service
+
+Handles:
+
+- User Registration
+- Login
+- JWT Authentication (In Progress)
+- Authorization
+
+---
+
+## Account Service
+
+Handles:
+
+- Customer Accounts
+- Profile Management
+- Account Operations
+
+---
+
+## Transaction Service
+
+Handles:
+
+- Banking Transactions
+- Transaction History
+- Payment Operations
+
+---
+
+## AI Service
+
+Handles:
+
+- Chat Assistant
+- Document Summarization
+- Retrieval-Augmented Generation
+- OpenAI Integration
+
+---
+
+# Documentation
+
+| Document | Purpose |
+|----------|---------|
+| README.md | Project overview |
+| PROJECT_STATUS.md | Weekly project progress |
+| ARCHITECTURE.md | System architecture |
+| API_DOCUMENTATION.md | REST API specifications |
+| DATABASE_DESIGN.md | Database schema |
+| AUTHENTICATION_FLOW.md | Authentication workflow |
+| SERVICE_INTERACTIONS.md | Service communication |
+| SPRINT_1_BACKLOG.md | Sprint planning |
+| CHANGELOG.md | Repository changes |
+
+---
+
+# Build
+
+```bash
+mvn clean install
+```
+
+---
+
+# Run Eureka Server
+
+```bash
+cd eureka-server
+
+mvn spring-boot:run
+```
+
+---
+
+# Run Account Service
+
+```bash
+cd account-service
+
+mvn spring-boot:run
+```
+
+---
+
+# Planned REST APIs
+
+## Authentication
+
+```
+POST /api/auth/register
+
+POST /api/auth/login
+
+GET /api/auth/profile
+```
+
+## Account
+
+```
+GET /api/accounts
+
+POST /api/accounts
+
+PUT /api/accounts/{id}
+```
+
+## Transactions
+
+```
+GET /api/transactions
+
+POST /api/transactions
+```
+
+## AI
+
+```
+POST /api/chat/query
+
+GET /api/chat/history
+```
+
+---
+
+# Current Progress
+
+| Week | Status |
+|-------|--------|
+| Week 1 | ✅ Completed |
+| Week 2 | ✅ Completed |
+| Week 3 | ✅ Completed |
+| Week 4 | 🚧 In Progress |
+
+Overall Project Progress: **25%**
+
+---
+
+# Upcoming Milestones
+
+## Week 5
+
+- JWT Authentication
+- Password Encryption
+- Login API
+
+## Week 6
+
+- Role-Based Authorization
+- Security Filters
+
+## Week 7
+
+- PostgreSQL Integration
+- CRUD Operations
+
+## Week 8
+
+- Document Service
+
+## Week 9
+
+- AI Chat Service
+
+## Week 10
+
+- OpenAI Integration
+
+## Week 11–20
+
+- Kafka
+- Redis
+- Docker
+- Kubernetes
+- AWS Deployment
+- CI/CD
+- Monitoring
+- Production Release
+
+---
+
+# Development Methodology
+
+- Agile Scrum
+- Weekly Sprint Planning
+- GitHub Issues
+- Feature Branch Workflow
+- Pull Requests
+- Code Reviews
+- Weekly Progress Reports
+
+---
+
+# License
 
 MIT License
+
+---
+
+## Author
+
+**Vamsi Chowdary Mandhapati**
+
+Enterprise Java Full Stack & Generative AI Developer
