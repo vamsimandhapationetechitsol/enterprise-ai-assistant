@@ -1,0 +1,94 @@
+package com.banking.ai.account.service.impl;
+
+import com.banking.ai.account.dto.RegisterRequest;
+import com.banking.ai.account.dto.UserResponse;
+import com.banking.ai.account.entity.User;
+import com.banking.ai.account.repository.UserRepository;
+import com.banking.ai.account.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
+import java.util.NoSuchElementException;
+
+@Service
+@Transactional
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserResponse registerUser(RegisterRequest request) {
+        String email = normalizeEmail(request.email());
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            throw new IllegalStateException("A user with this email already exists");
+        }
+
+        User user = new User();
+        applyRequest(user, request, email);
+        user.setPassword(passwordEncoder.encode(request.password()));
+        return toResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse findUser(Long id) {
+        return toResponse(findEntity(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse findUserByEmail(String email) {
+        return toResponse(userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+                .orElseThrow(() -> new NoSuchElementException("User not found")));
+    }
+
+    @Override
+    public UserResponse updateUser(Long id, RegisterRequest request) {
+        User user = findEntity(id);
+        String email = normalizeEmail(request.email());
+        userRepository.findByEmailIgnoreCase(email)
+                .filter(existing -> !existing.getId().equals(id))
+                .ifPresent(existing -> { throw new IllegalStateException("A user with this email already exists"); });
+        applyRequest(user, request, email);
+        if (request.password() != null && !request.password().isBlank()) {
+            user.setPassword(passwordEncoder.encode(request.password()));
+        }
+        return toResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean verifyPassword(String email, String rawPassword) {
+        return userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+                .orElse(false);
+    }
+
+    private User findEntity(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
+    }
+
+    private void applyRequest(User user, RegisterRequest request, String email) {
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(email);
+    }
+
+    private String normalizeEmail(String email) {
+        return email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.getRole(), user.getCreatedDate(), user.getUpdatedDate(), user.getStatus());
+    }
+}
