@@ -3,6 +3,8 @@ package com.banking.ai.account.service.impl;
 import com.banking.ai.account.dto.RegisterRequest;
 import com.banking.ai.account.dto.UserResponse;
 import com.banking.ai.account.entity.User;
+import com.banking.ai.account.exception.ResourceNotFoundException;
+import com.banking.ai.account.exception.UserAlreadyExistsException;
 import com.banking.ai.account.repository.UserRepository;
 import com.banking.ai.account.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse registerUser(RegisterRequest request) {
         String email = normalizeEmail(request.email());
         if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw new IllegalStateException("A user with this email already exists");
+            throw new UserAlreadyExistsException("A user with this email already exists");
         }
 
         User user = new User();
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserResponse findUserByEmail(String email) {
         return toResponse(userRepository.findByEmailIgnoreCase(normalizeEmail(email))
-                .orElseThrow(() -> new NoSuchElementException("User not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found")));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
         String email = normalizeEmail(request.email());
         userRepository.findByEmailIgnoreCase(email)
                 .filter(existing -> !existing.getId().equals(id))
-                .ifPresent(existing -> { throw new IllegalStateException("A user with this email already exists"); });
+                .ifPresent(existing -> { throw new UserAlreadyExistsException("A user with this email already exists"); });
         applyRequest(user, request, email);
         if (request.password() != null && !request.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.password()));
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     private User findEntity(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     private void applyRequest(User user, RegisterRequest request, String email) {
