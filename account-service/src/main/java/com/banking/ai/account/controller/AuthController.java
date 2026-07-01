@@ -5,6 +5,8 @@ import com.banking.ai.account.dto.RegisterRequest;
 import com.banking.ai.account.dto.RegisterResponse;
 import com.banking.ai.account.dto.UserResponse;
 import com.banking.ai.account.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Authentication", description = "User registration, login, and profile operations")
 public class AuthController {
 
     private final UserService userService;
@@ -24,6 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Register a user")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse user = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -31,6 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Log in a user")
     public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
         if (!userService.verifyPassword(request.email(), request.password())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -39,6 +44,7 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
+    @Operation(summary = "Get a user profile")
     public ResponseEntity<UserResponse> profile(@RequestParam String email) {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
