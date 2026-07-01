@@ -5,6 +5,7 @@ import com.banking.ai.account.dto.RegisterRequest;
 import com.banking.ai.account.dto.RegisterResponse;
 import com.banking.ai.account.dto.UserResponse;
 import com.banking.ai.account.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse user = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new RegisterResponse("User registered successfully", user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
         if (!userService.verifyPassword(request.email(), request.password())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
