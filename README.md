@@ -49,6 +49,7 @@ The goal of BankingAI Assistant is to build an enterprise-grade AI-powered platf
 | Folder | Purpose |
 |--------|----------|
 | `backend-auth-service` | Authentication and authorization service |
+| `account-service` | Week 4 user registration, login, and profile service |
 | `backend-chat-service` | AI chat functionality and LLM integration |
 | `backend-document-service` | Document ingestion, retrieval, and processing |
 | `frontend-react` | React-based user interface |
@@ -102,6 +103,39 @@ The goal of BankingAI Assistant is to build an enterprise-grade AI-powered platf
 - Kubernetes deployment
 - Authentication APIs
 - Document ingestion APIs
+
+---
+
+## Week 4 Progress
+
+The User Management Module is implemented in `account-service` with a layered Spring Boot architecture, PostgreSQL persistence, request validation, centralized exception handling, password hashing, OpenAPI documentation, and unit tests.
+
+### Architecture
+
+Requests flow from `AuthController` to `UserService`, then to `UserRepository` and PostgreSQL. DTOs define the API contract, the entity package owns persistence models, Spring Security provides password encoding, and the exception layer produces consistent error responses.
+
+### How to Run
+
+1. Install Java 17, Maven, and PostgreSQL.
+2. Create a PostgreSQL database named `account_db`.
+3. Optionally set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD`.
+4. Run `cd account-service` followed by `mvn spring-boot:run`.
+5. Open Swagger UI at `http://localhost:8081/swagger-ui.html`.
+
+### REST APIs
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `POST` | `/register` | Register a new user |
+| `POST` | `/login` | Validate user credentials |
+| `GET` | `/profile?email={email}` | Retrieve a user profile |
+
+### Future Work
+
+- Add JWT access and refresh tokens.
+- Require authenticated access to profile endpoints.
+- Add role-based authorization and account lifecycle APIs.
+- Add database migrations and containerized integration tests.
 
 ---
 
