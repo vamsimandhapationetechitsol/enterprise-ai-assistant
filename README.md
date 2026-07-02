@@ -12,7 +12,7 @@ Enterprise AI-powered Banking Assistant built using Java Spring Boot Microservic
 
 **Project Duration:** 5 Months
 
-**Current Phase:** Week 4 – User Management & Microservices Foundation
+**Current Phase:** – User Management & Microservices Foundation
 
 ---
 
