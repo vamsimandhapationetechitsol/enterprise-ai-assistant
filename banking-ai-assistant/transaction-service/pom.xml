@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.banking.ai</groupId>
         <artifactId>banking-ai-assistant</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>transaction-service</artifactId>
