@@ -1,6 +1,6 @@
 # Banking AI Assistant
 
-Banking AI Assistant is a Spring Boot microservices project for banking workflows. The current implementation focus is the `account-service`, which provides user registration, login, profile retrieval, account management, audit logging, validation, Swagger documentation, and unit tests. User records are stored in the `banking_users` table.
+Banking AI Assistant is a Spring Boot microservices project for banking workflows. The latest implementation focus is the `transaction-service`, which provides transaction creation, lookup, account transaction history, status updates, validation, exception handling, Swagger documentation, and unit tests. The prior `account-service` implementation includes user registration, login, profile retrieval, account management, audit logging, validation, Swagger documentation, and unit tests. User records are stored in the `banking_users` table.
 
 ## Services
 
@@ -38,6 +38,15 @@ Banking AI Assistant is a Spring Boot microservices project for banking workflow
 | `POST` | `/api/accounts` | Create an account |
 | `PATCH` | `/api/accounts/{accountId}/status` | Update account status |
 
+## Transaction Service API Endpoints
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/api/transactions` | Create a transaction |
+| `GET` | `/api/transactions/{id}` | Get transaction by ID |
+| `GET` | `/api/transactions/account/{accountId}` | Get transactions for an account |
+| `PATCH` | `/api/transactions/{id}/status` | Update transaction status |
+
 ## Build Instructions
 
 From the project root:
@@ -50,6 +59,12 @@ To build only the account service and required parent modules:
 
 ```bash
 mvn -pl account-service -am clean install
+```
+
+To build only the transaction service:
+
+```bash
+mvn -pl transaction-service clean install
 ```
 
 ## Run Instructions
@@ -70,6 +85,18 @@ Swagger UI is available at:
 
 ```text
 http://localhost:8082/swagger-ui/index.html
+```
+
+The transaction service runs on:
+
+```text
+http://localhost:8083
+```
+
+Transaction service Swagger UI is available at:
+
+```text
+http://localhost:8083/swagger-ui/index.html
 ```
 
 ## Sample Requests
@@ -106,6 +133,60 @@ Profile:
 ```http
 GET /profile?email=vamsi@example.com
 ```
+
+Create transaction:
+
+```http
+POST /api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "acc-1001",
+  "type": "DEBIT",
+  "amount": 25.00,
+  "currency": "USD",
+  "description": "ATM withdrawal"
+}
+```
+
+Update transaction status:
+
+```http
+PATCH /api/transactions/{id}/status
+Content-Type: application/json
+
+{
+  "status": "COMPLETED"
+}
+```
+
+## Week 6 Progress Update Email
+
+Subject: Development Progress Update - July 17, 2026
+
+Hi [Manager Name],
+
+I wanted to share my Week 6 development update for the Banking AI Assistant project.
+
+This week, I completed implementation improvements for the Transaction Service module. The work includes request and response DTOs, validation for transaction creation and status updates, mapping logic, centralized exception handling, Swagger API documentation support, reference ID generation, and unit tests for the service and controller layers.
+
+The following items have been completed:
+
+- Transaction request and response DTOs
+- Transaction validation rules
+- Transaction mapper implementation
+- Transaction service enhancements
+- REST API response cleanup
+- Not-found and validation exception handling
+- Unit tests for service and controller layers
+- Swagger documentation support
+- README updates with endpoints and run instructions
+- Successful Maven build and GitHub commit
+
+Please let me know if there are any additional improvements or review comments you would like me to address.
+
+Thank you,
+Vamsi Chowdary Mandhapati
 
 ## Progress Update Email
 
