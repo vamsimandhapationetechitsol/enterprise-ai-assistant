@@ -6,6 +6,7 @@ import com.banking.ai.account.entity.User;
 import com.banking.ai.account.exception.ResourceNotFoundException;
 import com.banking.ai.account.exception.UserAlreadyExistsException;
 import com.banking.ai.account.repository.UserRepository;
+import com.banking.ai.account.service.AuditService;
 import com.banking.ai.account.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditService auditService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuditService auditService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.auditService = auditService;
     }
 
     @Override
@@ -35,20 +38,26 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         applyRequest(user, request, email);
         user.setPassword(passwordEncoder.encode(request.password()));
-        return toResponse(userRepository.save(user));
+        UserResponse response = toResponse(userRepository.save(user));
+        auditService.logAction("USER_REGISTERED", email);
+        return response;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse findUser(Long id) {
-        return toResponse(findEntity(id));
+        UserResponse response = toResponse(findEntity(id));
+        auditService.logAction("USER_PROFILE_VIEWED", response.email());
+        return response;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse findUserByEmail(String email) {
-        return toResponse(userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+        UserResponse response = toResponse(userRepository.findByEmailIgnoreCase(normalizeEmail(email))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found")));
+        auditService.logAction("USER_PROFILE_VIEWED", response.email());
+        return response;
     }
 
     @Override
@@ -62,15 +71,19 @@ public class UserServiceImpl implements UserService {
         if (request.password() != null && !request.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.password()));
         }
-        return toResponse(userRepository.save(user));
+        UserResponse response = toResponse(userRepository.save(user));
+        auditService.logAction("USER_UPDATED", response.email());
+        return response;
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean verifyPassword(String email, String rawPassword) {
-        return userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+        boolean verified = userRepository.findByEmailIgnoreCase(normalizeEmail(email))
                 .map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
                 .orElse(false);
+        auditService.logAction(verified ? "USER_LOGIN_SUCCESS" : "USER_LOGIN_FAILED", normalizeEmail(email));
+        return verified;
     }
 
     private User findEntity(Long id) {

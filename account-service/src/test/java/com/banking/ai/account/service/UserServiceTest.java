@@ -22,10 +22,11 @@ class UserServiceTest {
 
     @Mock UserRepository userRepository;
     @Mock PasswordEncoder passwordEncoder;
+    @Mock AuditService auditService;
 
     @Test
     void registersUserWithNormalizedEmailAndEncodedPassword() {
-        UserService service = new UserServiceImpl(userRepository, passwordEncoder);
+        UserService service = new UserServiceImpl(userRepository, passwordEncoder, auditService);
         RegisterRequest request = new RegisterRequest("Vamsi", "Mandhapati", " VAMSI@example.com ", "password123");
         when(passwordEncoder.encode("password123")).thenReturn("encoded");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {

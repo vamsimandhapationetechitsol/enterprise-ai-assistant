@@ -175,6 +175,18 @@ banking-ai-assistant
 
 ---
 
+## July 17 Project Update
+
+- PostgreSQL-backed audit logging foundation
+- AuditLog JPA entity and repository
+- Audit service layer for storing and retrieving user activity
+- Audit REST API: `GET /api/audit`
+- Audit logging integrated with registration, login, profile lookup, and user update flows
+- Unit tests added for audit service behavior
+- Manager submission notes added in `JULY_17_PROJECT_UPDATE.md`
+
+---
+
 # Services
 
 ## Eureka Server
@@ -322,9 +334,10 @@ GET /api/chat/history
 | Week 1 | ✅ Completed |
 | Week 2 | ✅ Completed |
 | Week 3 | ✅ Completed |
-| Week 4 | 🚧 In Progress |
+| Week 4 | ✅ Completed |
+| July 17 Project Update | ✅ Completed |
 
-Overall Project Progress: **25%**
+Overall Project Progress: **35%**
 
 ---
 
@@ -341,7 +354,7 @@ Overall Project Progress: **25%**
 - Role-Based Authorization
 - Security Filters
 
-## Week 7
+## PostgreSQL Integration and CRUD Operations
 
 - PostgreSQL Integration
 - CRUD Operations
