@@ -187,6 +187,20 @@ banking-ai-assistant
 
 ---
 
+## July 31 Project Update
+
+- Document Service module foundation
+- DocumentMetadata JPA entity and PostgreSQL configuration
+- Repository layer for document metadata persistence
+- Service layer for create, list, retrieve, update, archive, and search operations
+- REST APIs under `/api/documents`
+- Request validation and global exception handling
+- Swagger/OpenAPI documentation
+- Unit tests for service and controller layers
+- Manager submission notes added in `JULY_31_PROJECT_UPDATE.md`
+
+---
+
 # Services
 
 ## Eureka Server
@@ -336,8 +350,9 @@ GET /api/chat/history
 | Week 3 | ✅ Completed |
 | Week 4 | ✅ Completed |
 | July 17 Project Update | ✅ Completed |
+| July 31 Project Update | ✅ Completed |
 
-Overall Project Progress: **35%**
+Overall Project Progress: **40%**
 
 ---
 
@@ -359,7 +374,7 @@ Overall Project Progress: **35%**
 - PostgreSQL Integration
 - CRUD Operations
 
-## Week 8
+## Document Service
 
 - Document Service
 

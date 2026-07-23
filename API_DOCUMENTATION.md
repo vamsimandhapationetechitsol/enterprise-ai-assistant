@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the API contracts and endpoint specifications for BankingAI Assistant. All endpoints are planned and will be finalized during API design in Week 2.
+This document defines the API contracts and endpoint specifications for BankingAI Assistant. The document endpoints are now backed by the Document Service implementation.
 
 ---
 
@@ -47,10 +47,11 @@ This document defines the API contracts and endpoint specifications for BankingA
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/` | Upload a document for ingestion |
-| GET | `/` | List all indexed documents |
+| POST | `/` | Create document metadata |
+| GET | `/` | List document metadata |
 | GET | `/{id}` | Retrieve document metadata |
-| DELETE | `/{id}` | Remove a document from the index |
+| PUT | `/{id}` | Update document metadata |
+| DELETE | `/{id}` | Archive document metadata |
 | POST | `/search` | Search documents by content or metadata |
 
 ### Document Upload Format
@@ -59,7 +60,8 @@ This document defines the API contracts and endpoint specifications for BankingA
 {
   "title": "Quarterly Report",
   "type": "PDF",
-  "content": "base64_encoded_content",
+  "ownerEmail": "manager@bankingai.local",
+  "summary": "Quarterly financial performance summary",
   "category": "financial",
   "tags": ["quarterly", "finance", "2026"]
 }
@@ -126,6 +128,5 @@ This document defines the API contracts and endpoint specifications for BankingA
 
 ## Notes
 
-- This document will be updated in Week 2 with final API specifications
 - OpenAPI/Swagger documentation will be generated from the codebase
 - All timestamps returned in ISO 8601 format
