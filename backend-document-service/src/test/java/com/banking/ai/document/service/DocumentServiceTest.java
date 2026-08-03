@@ -88,4 +88,38 @@ class DocumentServiceTest {
         assertThat(document.getStatus()).isEqualTo(DocumentMetadata.Status.ARCHIVED);
         verify(documentRepository).save(document);
     }
+
+    @Test
+    void restoresArchivedDocumentToIndexedStatus() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L);
+        document.setStatus(DocumentMetadata.Status.ARCHIVED);
+        when(documentRepository.findById(1L)).thenReturn(Optional.of(document));
+        when(documentRepository.save(document)).thenReturn(document);
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+        service.restoreDocument(1L);
+
+        assertThat(document.getStatus()).isEqualTo(DocumentMetadata.Status.INDEXED);
+        verify(documentRepository).save(document);
+    }
+
+    @Test
+    void filtersDocumentsByStatusWhenRequested() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L);
+        document.setTitle("Archived Policy");
+        document.setDocumentType("PDF");
+        document.setCategory("policy");
+        document.setOwnerEmail("manager@bankingai.local");
+        document.setStatus(DocumentMetadata.Status.ARCHIVED);
+        when(documentRepository.findByStatus(DocumentMetadata.Status.ARCHIVED)).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocuments(DocumentMetadata.Status.ARCHIVED))
+                .singleElement()
+                .extracting("status")
+                .isEqualTo(DocumentMetadata.Status.ARCHIVED);
+    }
 }

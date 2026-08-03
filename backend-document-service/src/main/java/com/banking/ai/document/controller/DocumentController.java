@@ -3,6 +3,7 @@ package com.banking.ai.document.controller;
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,9 +40,10 @@ public class DocumentController {
     }
 
     @GetMapping
-    @Operation(summary = "List document metadata")
-    public ResponseEntity<List<DocumentResponse>> getDocuments() {
-        return ResponseEntity.ok(documentService.getDocuments());
+    @Operation(summary = "List document metadata, optionally filtered by status")
+    public ResponseEntity<List<DocumentResponse>> getDocuments(
+            @RequestParam(required = false) DocumentMetadata.Status status) {
+        return ResponseEntity.ok(documentService.getDocuments(status));
     }
 
     @GetMapping("/{id}")
@@ -62,6 +65,12 @@ public class DocumentController {
     public ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
         documentService.deleteDocument(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/restore")
+    @Operation(summary = "Restore an archived document")
+    public ResponseEntity<DocumentResponse> restoreDocument(@PathVariable Long id) {
+        return ResponseEntity.ok(documentService.restoreDocument(id));
     }
 
     @PostMapping("/search")

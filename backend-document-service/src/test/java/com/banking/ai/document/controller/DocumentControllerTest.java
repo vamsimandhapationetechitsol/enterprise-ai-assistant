@@ -19,6 +19,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,6 +65,20 @@ class DocumentControllerTest {
         mockMvc.perform(post("/api/documents").contentType(MediaType.APPLICATION_JSON).content(request))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("Quarterly Report"))
+                .andExpect(jsonPath("$.status").value("INDEXED"));
+    }
+
+    @Test
+    void restoreDocumentReturnsIndexedMetadata() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Quarterly Report", "PDF", "financial", "manager@bankingai.local",
+                "Quarterly financial performance summary", List.of("quarterly"),
+                DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.restoreDocument(1L)).thenReturn(response);
+
+        mockMvc.perform(put("/api/documents/1/restore"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.status").value("INDEXED"));
     }
 

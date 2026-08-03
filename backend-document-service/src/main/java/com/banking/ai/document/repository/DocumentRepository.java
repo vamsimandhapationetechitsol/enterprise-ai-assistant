@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface DocumentRepository extends JpaRepository<DocumentMetadata, Long> {
 
+    List<DocumentMetadata> findByStatus(DocumentMetadata.Status status);
+
     List<DocumentMetadata> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCaseOrSummaryContainingIgnoreCase(
             String titleKeyword,
             String categoryKeyword,

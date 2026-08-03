@@ -31,8 +31,11 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DocumentResponse> getDocuments() {
-        return documentRepository.findAll()
+    public List<DocumentResponse> getDocuments(DocumentMetadata.Status status) {
+        List<DocumentMetadata> documents = status == null
+                ? documentRepository.findAll()
+                : documentRepository.findByStatus(status);
+        return documents
                 .stream()
                 .map(DocumentMapper::toResponse)
                 .toList();
@@ -56,6 +59,13 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentMetadata document = findEntity(id);
         document.setStatus(DocumentMetadata.Status.ARCHIVED);
         documentRepository.save(document);
+    }
+
+    @Override
+    public DocumentResponse restoreDocument(Long id) {
+        DocumentMetadata document = findEntity(id);
+        document.setStatus(DocumentMetadata.Status.INDEXED);
+        return DocumentMapper.toResponse(documentRepository.save(document));
     }
 
     @Override
