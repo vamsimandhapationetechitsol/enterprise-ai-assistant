@@ -122,4 +122,17 @@ class DocumentServiceTest {
                 .extracting("status")
                 .isEqualTo(DocumentMetadata.Status.ARCHIVED);
     }
+
+    @Test
+    void returnsDocumentCountsByStatus() {
+        when(documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED)).thenReturn(2L);
+        when(documentRepository.countByStatus(DocumentMetadata.Status.INDEXED)).thenReturn(8L);
+        when(documentRepository.countByStatus(DocumentMetadata.Status.ARCHIVED)).thenReturn(1L);
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getStatusSummary())
+                .extracting("uploaded", "indexed", "archived")
+                .containsExactly(2L, 8L, 1L);
+    }
 }

@@ -54,6 +54,7 @@ This document defines the API contracts and endpoint specifications for BankingA
 | DELETE | `/{id}` | Archive document metadata |
 | PUT | `/{id}/restore` | Restore an archived document to `INDEXED` status |
 | POST | `/search` | Search documents by content or metadata |
+| GET | `/summary` | Get document counts by lifecycle status |
 
 ### Document Upload Format
 

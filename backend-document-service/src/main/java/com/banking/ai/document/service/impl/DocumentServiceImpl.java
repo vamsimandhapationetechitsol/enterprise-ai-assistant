@@ -3,6 +3,7 @@ package com.banking.ai.document.service.impl;
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.exception.DocumentNotFoundException;
 import com.banking.ai.document.mapper.DocumentMapper;
@@ -78,6 +79,15 @@ public class DocumentServiceImpl implements DocumentService {
                 .stream()
                 .map(DocumentMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DocumentStatusSummary getStatusSummary() {
+        return new DocumentStatusSummary(
+                documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED),
+                documentRepository.countByStatus(DocumentMetadata.Status.INDEXED),
+                documentRepository.countByStatus(DocumentMetadata.Status.ARCHIVED));
     }
 
     private DocumentMetadata findEntity(Long id) {

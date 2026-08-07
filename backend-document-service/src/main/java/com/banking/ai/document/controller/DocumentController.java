@@ -3,6 +3,7 @@ package com.banking.ai.document.controller;
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,5 +78,11 @@ public class DocumentController {
     @Operation(summary = "Search document metadata")
     public ResponseEntity<List<DocumentResponse>> searchDocuments(@Valid @RequestBody DocumentSearchRequest request) {
         return ResponseEntity.ok(documentService.searchDocuments(request));
+    }
+
+    @GetMapping("/summary")
+    @Operation(summary = "Get document counts by lifecycle status")
+    public ResponseEntity<DocumentStatusSummary> getStatusSummary() {
+        return ResponseEntity.ok(documentService.getStatusSummary());
     }
 }
