@@ -12,7 +12,7 @@ public interface DocumentService {
 
     DocumentResponse createDocument(DocumentRequest request);
 
-    List<DocumentResponse> getDocuments(DocumentMetadata.Status status);
+    List<DocumentResponse> getDocuments(DocumentMetadata.Status status, String category);
 
     DocumentResponse getDocument(Long id);
 

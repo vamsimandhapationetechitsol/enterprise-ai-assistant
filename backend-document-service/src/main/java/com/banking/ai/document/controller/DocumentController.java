@@ -41,10 +41,11 @@ public class DocumentController {
     }
 
     @GetMapping
-    @Operation(summary = "List document metadata, optionally filtered by status")
+    @Operation(summary = "List document metadata, optionally filtered by status and category")
     public ResponseEntity<List<DocumentResponse>> getDocuments(
-            @RequestParam(required = false) DocumentMetadata.Status status) {
-        return ResponseEntity.ok(documentService.getDocuments(status));
+            @RequestParam(required = false) DocumentMetadata.Status status,
+            @RequestParam(required = false) String category) {
+        return ResponseEntity.ok(documentService.getDocuments(status, category));
     }
 
     @GetMapping("/{id}")

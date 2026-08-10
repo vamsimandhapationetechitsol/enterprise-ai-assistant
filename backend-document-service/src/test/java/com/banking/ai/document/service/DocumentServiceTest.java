@@ -117,10 +117,28 @@ class DocumentServiceTest {
 
         DocumentService service = new DocumentServiceImpl(documentRepository);
 
-        assertThat(service.getDocuments(DocumentMetadata.Status.ARCHIVED))
+        assertThat(service.getDocuments(DocumentMetadata.Status.ARCHIVED, null))
                 .singleElement()
                 .extracting("status")
                 .isEqualTo(DocumentMetadata.Status.ARCHIVED);
+    }
+
+    @Test
+    void filtersDocumentsByCategoryWhenRequested() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L);
+        document.setTitle("Financial Report");
+        document.setDocumentType("PDF");
+        document.setCategory("financial");
+        document.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findByCategoryIgnoreCase("financial")).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocuments(null, " financial "))
+                .singleElement()
+                .extracting("category")
+                .isEqualTo("financial");
     }
 
     @Test

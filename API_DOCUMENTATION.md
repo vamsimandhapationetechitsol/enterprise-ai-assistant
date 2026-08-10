@@ -48,7 +48,7 @@ This document defines the API contracts and endpoint specifications for BankingA
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/` | Create document metadata |
-| GET | `/?status={status}` | List document metadata, optionally filtered by `INDEXED`, `UPLOADED`, or `ARCHIVED` status |
+| GET | `/?status={status}&category={category}` | List document metadata, optionally filtered by lifecycle status and category |
 | GET | `/{id}` | Retrieve document metadata |
 | PUT | `/{id}` | Update document metadata |
 | DELETE | `/{id}` | Archive document metadata |

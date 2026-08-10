@@ -32,10 +32,18 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DocumentResponse> getDocuments(DocumentMetadata.Status status) {
-        List<DocumentMetadata> documents = status == null
-                ? documentRepository.findAll()
-                : documentRepository.findByStatus(status);
+    public List<DocumentResponse> getDocuments(DocumentMetadata.Status status, String category) {
+        String normalizedCategory = category == null || category.isBlank() ? null : category.trim();
+        List<DocumentMetadata> documents;
+        if (status != null && normalizedCategory != null) {
+            documents = documentRepository.findByStatusAndCategoryIgnoreCase(status, normalizedCategory);
+        } else if (status != null) {
+            documents = documentRepository.findByStatus(status);
+        } else if (normalizedCategory != null) {
+            documents = documentRepository.findByCategoryIgnoreCase(normalizedCategory);
+        } else {
+            documents = documentRepository.findAll();
+        }
         return documents
                 .stream()
                 .map(DocumentMapper::toResponse)
