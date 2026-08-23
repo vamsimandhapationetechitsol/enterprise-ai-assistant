@@ -1,6 +1,7 @@
 package com.banking.ai.document.service.impl;
 
 import com.banking.ai.document.dto.DocumentRequest;
+import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
 import com.banking.ai.document.dto.DocumentStatusSummary;
@@ -48,6 +49,17 @@ public class DocumentServiceImpl implements DocumentService {
                 .stream()
                 .map(DocumentMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DocumentPageResponse getDocumentsPage(DocumentMetadata.Status status, String category, int page, int size) {
+        List<DocumentResponse> documents = getDocuments(status, category);
+        int totalElements = documents.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+        int fromIndex = Math.min(page * size, totalElements);
+        int toIndex = Math.min(fromIndex + size, totalElements);
+        return new DocumentPageResponse(documents.subList(fromIndex, toIndex), page, size, totalElements, totalPages);
     }
 
     @Override

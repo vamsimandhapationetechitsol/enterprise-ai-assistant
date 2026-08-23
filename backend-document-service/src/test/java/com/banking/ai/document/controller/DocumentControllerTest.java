@@ -1,6 +1,7 @@
 package com.banking.ai.document.controller;
 
 import com.banking.ai.document.dto.DocumentResponse;
+import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.exception.GlobalExceptionHandler;
@@ -93,6 +94,17 @@ class DocumentControllerTest {
                 .andExpect(jsonPath("$.uploaded").value(2))
                 .andExpect(jsonPath("$.indexed").value(8))
                 .andExpect(jsonPath("$.archived").value(1));
+    }
+
+    @Test
+    void pageEndpointReturnsPaginationMetadata() throws Exception {
+        when(documentService.getDocumentsPage(null, null, 0, 20))
+                .thenReturn(new DocumentPageResponse(List.of(), 0, 20, 0, 0));
+
+        mockMvc.perform(get("/api/documents/page"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(20));
     }
 
     private record DocumentPayload(

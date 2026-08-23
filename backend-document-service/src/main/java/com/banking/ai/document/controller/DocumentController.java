@@ -1,6 +1,7 @@
 package com.banking.ai.document.controller;
 
 import com.banking.ai.document.dto.DocumentRequest;
+import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
 import com.banking.ai.document.dto.DocumentStatusSummary;
@@ -9,6 +10,8 @@ import com.banking.ai.document.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,6 +49,16 @@ public class DocumentController {
             @RequestParam(required = false) DocumentMetadata.Status status,
             @RequestParam(required = false) String category) {
         return ResponseEntity.ok(documentService.getDocuments(status, category));
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "List document metadata in pages with optional status and category filters")
+    public ResponseEntity<DocumentPageResponse> getDocumentsPage(
+            @RequestParam(required = false) DocumentMetadata.Status status,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
+        return ResponseEntity.ok(documentService.getDocumentsPage(status, category, page, size));
     }
 
     @GetMapping("/{id}")

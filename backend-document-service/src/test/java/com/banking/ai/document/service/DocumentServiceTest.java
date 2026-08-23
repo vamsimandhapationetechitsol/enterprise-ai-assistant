@@ -142,6 +142,21 @@ class DocumentServiceTest {
     }
 
     @Test
+    void returnsARequestedDocumentPage() {
+        DocumentMetadata first = new DocumentMetadata();
+        first.setId(1L); first.setTitle("First"); first.setDocumentType("PDF"); first.setCategory("policy"); first.setOwnerEmail("manager@bankingai.local");
+        DocumentMetadata second = new DocumentMetadata();
+        second.setId(2L); second.setTitle("Second"); second.setDocumentType("PDF"); second.setCategory("policy"); second.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findAll()).thenReturn(List.of(first, second));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocumentsPage(null, null, 1, 1))
+                .extracting("page", "size", "totalElements", "totalPages")
+                .containsExactly(1, 1, 2L, 2);
+    }
+
+    @Test
     void returnsDocumentCountsByStatus() {
         when(documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED)).thenReturn(2L);
         when(documentRepository.countByStatus(DocumentMetadata.Status.INDEXED)).thenReturn(8L);
