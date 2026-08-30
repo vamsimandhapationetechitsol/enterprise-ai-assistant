@@ -3,6 +3,7 @@ package com.banking.ai.document.controller;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentStatusSummary;
+import com.banking.ai.document.dto.DocumentSortField;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.exception.GlobalExceptionHandler;
 import com.banking.ai.document.service.DocumentService;
@@ -98,7 +99,7 @@ class DocumentControllerTest {
 
     @Test
     void pageEndpointReturnsPaginationMetadata() throws Exception {
-        when(documentService.getDocumentsPage(null, null, 0, 20))
+        when(documentService.getDocumentsPage(null, null, 0, 20, DocumentSortField.TITLE, false))
                 .thenReturn(new DocumentPageResponse(List.of(), 0, 20, 0, 0));
 
         mockMvc.perform(get("/api/documents/page"))

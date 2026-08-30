@@ -2,6 +2,7 @@ package com.banking.ai.document.service;
 
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.dto.DocumentSortField;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.repository.DocumentRepository;
 import com.banking.ai.document.service.impl.DocumentServiceImpl;
@@ -151,9 +152,24 @@ class DocumentServiceTest {
 
         DocumentService service = new DocumentServiceImpl(documentRepository);
 
-        assertThat(service.getDocumentsPage(null, null, 1, 1))
+        assertThat(service.getDocumentsPage(null, null, 1, 1, DocumentSortField.TITLE, false))
                 .extracting("page", "size", "totalElements", "totalPages")
                 .containsExactly(1, 1, 2L, 2);
+    }
+
+    @Test
+    void sortsDocumentPagesByTitleInDescendingOrder() {
+        DocumentMetadata alpha = new DocumentMetadata();
+        alpha.setId(1L); alpha.setTitle("Alpha"); alpha.setDocumentType("PDF"); alpha.setCategory("policy"); alpha.setOwnerEmail("manager@bankingai.local");
+        DocumentMetadata zebra = new DocumentMetadata();
+        zebra.setId(2L); zebra.setTitle("Zebra"); zebra.setDocumentType("PDF"); zebra.setCategory("policy"); zebra.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findAll()).thenReturn(List.of(alpha, zebra));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocumentsPage(null, null, 0, 20, DocumentSortField.TITLE, true).documents())
+                .extracting("title")
+                .containsExactly("Zebra", "Alpha");
     }
 
     @Test

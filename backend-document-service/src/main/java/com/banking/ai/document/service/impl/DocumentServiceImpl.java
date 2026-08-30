@@ -5,6 +5,7 @@ import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
 import com.banking.ai.document.dto.DocumentStatusSummary;
+import com.banking.ai.document.dto.DocumentSortField;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.exception.DocumentNotFoundException;
 import com.banking.ai.document.mapper.DocumentMapper;
@@ -13,6 +14,7 @@ import com.banking.ai.document.service.DocumentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -53,8 +55,17 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public DocumentPageResponse getDocumentsPage(DocumentMetadata.Status status, String category, int page, int size) {
+    public DocumentPageResponse getDocumentsPage(
+            DocumentMetadata.Status status, String category, int page, int size,
+            DocumentSortField sortBy, boolean descending) {
         List<DocumentResponse> documents = getDocuments(status, category);
+        Comparator<DocumentResponse> comparator = sortBy == DocumentSortField.UPDATED_DATE
+                ? Comparator.comparing(DocumentResponse::updatedDate, Comparator.nullsLast(Comparator.naturalOrder()))
+                : Comparator.comparing(DocumentResponse::title, String.CASE_INSENSITIVE_ORDER);
+        if (descending) {
+            comparator = comparator.reversed();
+        }
+        documents = documents.stream().sorted(comparator).toList();
         int totalElements = documents.size();
         int totalPages = (int) Math.ceil((double) totalElements / size);
         int fromIndex = Math.min(page * size, totalElements);

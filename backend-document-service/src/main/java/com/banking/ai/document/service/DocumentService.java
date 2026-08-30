@@ -4,6 +4,7 @@ import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.dto.DocumentSortField;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.entity.DocumentMetadata;
 
@@ -15,7 +16,9 @@ public interface DocumentService {
 
     List<DocumentResponse> getDocuments(DocumentMetadata.Status status, String category);
 
-    DocumentPageResponse getDocumentsPage(DocumentMetadata.Status status, String category, int page, int size);
+    DocumentPageResponse getDocumentsPage(
+            DocumentMetadata.Status status, String category, int page, int size,
+            DocumentSortField sortBy, boolean descending);
 
     DocumentResponse getDocument(Long id);
 

@@ -4,6 +4,7 @@ import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
+import com.banking.ai.document.dto.DocumentSortField;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.entity.DocumentMetadata;
 import com.banking.ai.document.service.DocumentService;
@@ -52,13 +53,15 @@ public class DocumentController {
     }
 
     @GetMapping("/page")
-    @Operation(summary = "List document metadata in pages with optional status and category filters")
+    @Operation(summary = "List document metadata in sorted pages with optional status and category filters")
     public ResponseEntity<DocumentPageResponse> getDocumentsPage(
             @RequestParam(required = false) DocumentMetadata.Status status,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
-        return ResponseEntity.ok(documentService.getDocumentsPage(status, category, page, size));
+            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
+            @RequestParam(defaultValue = "TITLE") DocumentSortField sortBy,
+            @RequestParam(defaultValue = "false") boolean descending) {
+        return ResponseEntity.ok(documentService.getDocumentsPage(status, category, page, size, sortBy, descending));
     }
 
     @GetMapping("/{id}")
