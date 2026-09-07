@@ -16,6 +16,8 @@ public interface DocumentService {
 
     List<DocumentResponse> getDocuments(DocumentMetadata.Status status, String category);
 
+    List<DocumentResponse> getDocumentsByTag(String tag);
+
     DocumentPageResponse getDocumentsPage(
             DocumentMetadata.Status status, String category, int page, int size,
             DocumentSortField sortBy, boolean descending);

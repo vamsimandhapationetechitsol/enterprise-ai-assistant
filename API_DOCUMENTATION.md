@@ -49,6 +49,7 @@ This document defines the API contracts and endpoint specifications for BankingA
 |--------|----------|-------------|
 | POST | `/` | Create document metadata |
 | GET | `/?status={status}&category={category}` | List document metadata, optionally filtered by lifecycle status and category |
+| GET | `/tag/{tag}` | List document metadata matching a tag |
 | GET | `/page?page={page}&size={size}&sortBy={field}&descending={boolean}` | List sorted document metadata in pages; supported sort fields are `TITLE` and `UPDATED_DATE` |
 | GET | `/{id}` | Retrieve document metadata |
 | PUT | `/{id}` | Update document metadata |

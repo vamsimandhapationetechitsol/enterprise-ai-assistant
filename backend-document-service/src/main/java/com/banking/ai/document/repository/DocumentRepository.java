@@ -13,6 +13,8 @@ public interface DocumentRepository extends JpaRepository<DocumentMetadata, Long
 
     List<DocumentMetadata> findByStatusAndCategoryIgnoreCase(DocumentMetadata.Status status, String category);
 
+    List<DocumentMetadata> findDistinctByTagsIgnoreCase(String tag);
+
     long countByStatus(DocumentMetadata.Status status);
 
     List<DocumentMetadata> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCaseOrSummaryContainingIgnoreCase(

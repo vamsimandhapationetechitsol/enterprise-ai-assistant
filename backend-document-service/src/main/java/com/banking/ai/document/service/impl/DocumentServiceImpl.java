@@ -55,6 +55,15 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<DocumentResponse> getDocumentsByTag(String tag) {
+        return documentRepository.findDistinctByTagsIgnoreCase(tag.trim())
+                .stream()
+                .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public DocumentPageResponse getDocumentsPage(
             DocumentMetadata.Status status, String category, int page, int size,
             DocumentSortField sortBy, boolean descending) {

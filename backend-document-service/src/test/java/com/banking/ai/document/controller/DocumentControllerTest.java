@@ -108,6 +108,18 @@ class DocumentControllerTest {
                 .andExpect(jsonPath("$.size").value(20));
     }
 
+    @Test
+    void tagEndpointReturnsMatchingDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Risk Assessment", "PDF", "risk", "manager@bankingai.local",
+                "Risk review", List.of("compliance"), DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.getDocumentsByTag("compliance")).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/tag/compliance"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Risk Assessment"));
+    }
+
     private record DocumentPayload(
             String title,
             String documentType,

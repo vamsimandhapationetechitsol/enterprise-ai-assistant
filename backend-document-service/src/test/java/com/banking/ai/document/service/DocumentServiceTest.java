@@ -173,6 +173,22 @@ class DocumentServiceTest {
     }
 
     @Test
+    void filtersDocumentsByTagWhenRequested() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L); document.setTitle("Risk Assessment"); document.setDocumentType("PDF");
+        document.setCategory("risk"); document.setOwnerEmail("manager@bankingai.local");
+        document.setTags(List.of("compliance", "review"));
+        when(documentRepository.findDistinctByTagsIgnoreCase("compliance")).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocumentsByTag(" compliance "))
+                .singleElement()
+                .extracting("title")
+                .isEqualTo("Risk Assessment");
+    }
+
+    @Test
     void returnsDocumentCountsByStatus() {
         when(documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED)).thenReturn(2L);
         when(documentRepository.countByStatus(DocumentMetadata.Status.INDEXED)).thenReturn(8L);
