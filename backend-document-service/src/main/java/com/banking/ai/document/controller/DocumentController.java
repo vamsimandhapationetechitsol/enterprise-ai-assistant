@@ -58,6 +58,12 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getDocumentsByTag(tag));
     }
 
+    @GetMapping("/owner/{ownerEmail}")
+    @Operation(summary = "List document metadata by owner email")
+    public ResponseEntity<List<DocumentResponse>> getDocumentsByOwner(@PathVariable String ownerEmail) {
+        return ResponseEntity.ok(documentService.getDocumentsByOwner(ownerEmail));
+    }
+
     @GetMapping("/page")
     @Operation(summary = "List document metadata in sorted pages with optional status and category filters")
     public ResponseEntity<DocumentPageResponse> getDocumentsPage(

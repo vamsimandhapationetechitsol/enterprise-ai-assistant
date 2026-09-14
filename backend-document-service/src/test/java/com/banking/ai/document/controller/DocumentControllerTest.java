@@ -120,6 +120,18 @@ class DocumentControllerTest {
                 .andExpect(jsonPath("$[0].title").value("Risk Assessment"));
     }
 
+    @Test
+    void ownerEndpointReturnsMatchingDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Credit Review", "PDF", "risk", "manager@bankingai.local",
+                "Credit risk review", List.of("risk"), DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.getDocumentsByOwner("manager@bankingai.local")).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/owner/manager@bankingai.local"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].ownerEmail").value("manager@bankingai.local"));
+    }
+
     private record DocumentPayload(
             String title,
             String documentType,

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -57,6 +58,15 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional(readOnly = true)
     public List<DocumentResponse> getDocumentsByTag(String tag) {
         return documentRepository.findDistinctByTagsIgnoreCase(tag.trim())
+                .stream()
+                .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DocumentResponse> getDocumentsByOwner(String ownerEmail) {
+        return documentRepository.findByOwnerEmailIgnoreCase(ownerEmail.trim().toLowerCase(Locale.ROOT))
                 .stream()
                 .map(DocumentMapper::toResponse)
                 .toList();

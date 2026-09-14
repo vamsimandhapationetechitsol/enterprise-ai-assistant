@@ -18,6 +18,8 @@ public interface DocumentService {
 
     List<DocumentResponse> getDocumentsByTag(String tag);
 
+    List<DocumentResponse> getDocumentsByOwner(String ownerEmail);
+
     DocumentPageResponse getDocumentsPage(
             DocumentMetadata.Status status, String category, int page, int size,
             DocumentSortField sortBy, boolean descending);

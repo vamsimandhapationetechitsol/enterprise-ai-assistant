@@ -189,6 +189,21 @@ class DocumentServiceTest {
     }
 
     @Test
+    void filtersDocumentsByOwnerWhenRequested() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L); document.setTitle("Credit Review"); document.setDocumentType("PDF");
+        document.setCategory("risk"); document.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findByOwnerEmailIgnoreCase("manager@bankingai.local")).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocumentsByOwner(" Manager@BankingAI.Local "))
+                .singleElement()
+                .extracting("ownerEmail")
+                .isEqualTo("manager@bankingai.local");
+    }
+
+    @Test
     void returnsDocumentCountsByStatus() {
         when(documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED)).thenReturn(2L);
         when(documentRepository.countByStatus(DocumentMetadata.Status.INDEXED)).thenReturn(8L);
