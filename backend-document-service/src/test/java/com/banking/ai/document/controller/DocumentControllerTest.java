@@ -132,6 +132,18 @@ class DocumentControllerTest {
                 .andExpect(jsonPath("$[0].ownerEmail").value("manager@bankingai.local"));
     }
 
+    @Test
+    void typeEndpointReturnsMatchingDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Loan Agreement", "PDF", "lending", "manager@bankingai.local",
+                "Lending agreement", List.of("lending"), DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.getDocumentsByType("PDF")).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/type/PDF"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].documentType").value("PDF"));
+    }
+
     private record DocumentPayload(
             String title,
             String documentType,

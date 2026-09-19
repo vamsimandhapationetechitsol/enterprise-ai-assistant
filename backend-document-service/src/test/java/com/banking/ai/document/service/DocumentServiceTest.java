@@ -204,6 +204,21 @@ class DocumentServiceTest {
     }
 
     @Test
+    void filtersDocumentsByTypeWhenRequested() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L); document.setTitle("Loan Agreement"); document.setDocumentType("PDF");
+        document.setCategory("lending"); document.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findByDocumentTypeIgnoreCase("PDF")).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getDocumentsByType(" PDF "))
+                .singleElement()
+                .extracting("documentType")
+                .isEqualTo("PDF");
+    }
+
+    @Test
     void returnsDocumentCountsByStatus() {
         when(documentRepository.countByStatus(DocumentMetadata.Status.UPLOADED)).thenReturn(2L);
         when(documentRepository.countByStatus(DocumentMetadata.Status.INDEXED)).thenReturn(8L);

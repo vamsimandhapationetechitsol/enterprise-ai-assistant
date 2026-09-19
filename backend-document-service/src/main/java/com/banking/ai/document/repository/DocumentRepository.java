@@ -17,6 +17,8 @@ public interface DocumentRepository extends JpaRepository<DocumentMetadata, Long
 
     List<DocumentMetadata> findByOwnerEmailIgnoreCase(String ownerEmail);
 
+    List<DocumentMetadata> findByDocumentTypeIgnoreCase(String documentType);
+
     long countByStatus(DocumentMetadata.Status status);
 
     List<DocumentMetadata> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCaseOrSummaryContainingIgnoreCase(
