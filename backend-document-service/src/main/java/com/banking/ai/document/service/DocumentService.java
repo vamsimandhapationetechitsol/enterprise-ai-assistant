@@ -16,6 +16,8 @@ public interface DocumentService {
 
     List<DocumentResponse> getDocuments(DocumentMetadata.Status status, String category);
 
+    List<DocumentResponse> getActiveDocuments();
+
     List<DocumentResponse> getDocumentsByTag(String tag);
 
     List<DocumentResponse> getDocumentsByOwner(String ownerEmail);

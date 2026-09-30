@@ -109,6 +109,18 @@ class DocumentControllerTest {
     }
 
     @Test
+    void activeEndpointReturnsNonArchivedDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Active Policy", "PDF", "policy", "manager@bankingai.local",
+                "Current policy", List.of("policy"), DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.getActiveDocuments()).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/active"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("INDEXED"));
+    }
+
+    @Test
     void tagEndpointReturnsMatchingDocuments() throws Exception {
         DocumentResponse response = new DocumentResponse(
                 1L, "Risk Assessment", "PDF", "risk", "manager@bankingai.local",

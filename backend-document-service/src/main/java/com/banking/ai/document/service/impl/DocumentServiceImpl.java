@@ -56,6 +56,15 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<DocumentResponse> getActiveDocuments() {
+        return documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)
+                .stream()
+                .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<DocumentResponse> getDocumentsByTag(String tag) {
         return documentRepository.findDistinctByTagsIgnoreCase(tag.trim())
                 .stream()

@@ -125,6 +125,22 @@ class DocumentServiceTest {
     }
 
     @Test
+    void returnsDocumentsThatHaveNotBeenArchived() {
+        DocumentMetadata document = new DocumentMetadata();
+        document.setId(1L); document.setTitle("Active Policy"); document.setDocumentType("PDF");
+        document.setCategory("policy"); document.setOwnerEmail("manager@bankingai.local");
+        document.setStatus(DocumentMetadata.Status.INDEXED);
+        when(documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)).thenReturn(List.of(document));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getActiveDocuments())
+                .singleElement()
+                .extracting("status")
+                .isEqualTo(DocumentMetadata.Status.INDEXED);
+    }
+
+    @Test
     void filtersDocumentsByCategoryWhenRequested() {
         DocumentMetadata document = new DocumentMetadata();
         document.setId(1L);
