@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -138,6 +139,27 @@ class DocumentServiceTest {
                 .singleElement()
                 .extracting("status")
                 .isEqualTo(DocumentMetadata.Status.INDEXED);
+    }
+
+    @Test
+    void returnsTheRequestedNumberOfRecentlyUpdatedActiveDocuments() {
+        DocumentMetadata newest = new DocumentMetadata();
+        newest.setId(1L); newest.setTitle("New Policy"); newest.setDocumentType("PDF");
+        newest.setCategory("policy"); newest.setOwnerEmail("manager@bankingai.local");
+        newest.setUpdatedDate(LocalDateTime.of(2026, 10, 5, 10, 0));
+        DocumentMetadata older = new DocumentMetadata();
+        older.setId(2L); older.setTitle("Older Policy"); older.setDocumentType("PDF");
+        older.setCategory("policy"); older.setOwnerEmail("manager@bankingai.local");
+        older.setUpdatedDate(LocalDateTime.of(2026, 10, 4, 10, 0));
+        when(documentRepository.findByStatusNotOrderByUpdatedDateDesc(DocumentMetadata.Status.ARCHIVED))
+                .thenReturn(List.of(newest, older));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getRecentlyUpdatedDocuments(1))
+                .singleElement()
+                .extracting("title")
+                .isEqualTo("New Policy");
     }
 
     @Test

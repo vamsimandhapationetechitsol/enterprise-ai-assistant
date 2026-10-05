@@ -121,6 +121,18 @@ class DocumentControllerTest {
     }
 
     @Test
+    void recentEndpointReturnsTheRequestedNumberOfDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "New Policy", "PDF", "policy", "manager@bankingai.local",
+                "Recently updated", List.of("policy"), DocumentMetadata.Status.INDEXED, null, null);
+        when(documentService.getRecentlyUpdatedDocuments(1)).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/recent").param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("New Policy"));
+    }
+
+    @Test
     void tagEndpointReturnsMatchingDocuments() throws Exception {
         DocumentResponse response = new DocumentResponse(
                 1L, "Risk Assessment", "PDF", "risk", "manager@bankingai.local",

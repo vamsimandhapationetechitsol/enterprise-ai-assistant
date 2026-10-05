@@ -65,6 +65,16 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<DocumentResponse> getRecentlyUpdatedDocuments(int limit) {
+        return documentRepository.findByStatusNotOrderByUpdatedDateDesc(DocumentMetadata.Status.ARCHIVED)
+                .stream()
+                .limit(limit)
+                .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<DocumentResponse> getDocumentsByTag(String tag) {
         return documentRepository.findDistinctByTagsIgnoreCase(tag.trim())
                 .stream()
