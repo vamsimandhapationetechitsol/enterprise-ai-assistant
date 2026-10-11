@@ -1,6 +1,7 @@
 package com.banking.ai.document.controller;
 
 import com.banking.ai.document.dto.DocumentResponse;
+import com.banking.ai.document.dto.DocumentCategorySummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.dto.DocumentSortField;
@@ -118,6 +119,16 @@ class DocumentControllerTest {
         mockMvc.perform(get("/api/documents/active"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value("INDEXED"));
+    }
+
+    @Test
+    void activeCategorySummaryReturnsCategoryCounts() throws Exception {
+        when(documentService.getActiveCategorySummary()).thenReturn(List.of(new DocumentCategorySummary("risk", 2L)));
+
+        mockMvc.perform(get("/api/documents/active/categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].category").value("risk"))
+                .andExpect(jsonPath("$[0].documentCount").value(2));
     }
 
     @Test

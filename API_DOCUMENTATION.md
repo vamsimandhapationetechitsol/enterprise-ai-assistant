@@ -50,6 +50,7 @@ This document defines the API contracts and endpoint specifications for BankingA
 | POST | `/` | Create document metadata |
 | GET | `/?status={status}&category={category}` | List document metadata, optionally filtered by lifecycle status and category |
 | GET | `/active` | List document metadata that has not been archived |
+| GET | `/active/categories` | Get active document counts grouped by category |
 | GET | `/recent?limit={limit}` | List recently updated active document metadata; default limit is 10 |
 | GET | `/tag/{tag}` | List document metadata matching a tag |
 | GET | `/owner/{ownerEmail}` | List document metadata matching an owner email |

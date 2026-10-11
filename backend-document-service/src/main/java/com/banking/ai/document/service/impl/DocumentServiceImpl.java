@@ -1,6 +1,7 @@
 package com.banking.ai.document.service.impl;
 
 import com.banking.ai.document.dto.DocumentRequest;
+import com.banking.ai.document.dto.DocumentCategorySummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,6 +63,21 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)
                 .stream()
                 .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DocumentCategorySummary> getActiveCategorySummary() {
+        return documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        document -> document.getCategory().trim().toLowerCase(Locale.ROOT),
+                        TreeMap::new,
+                        Collectors.counting()))
+                .entrySet()
+                .stream()
+                .map(entry -> new DocumentCategorySummary(entry.getKey(), entry.getValue()))
                 .toList();
     }
 

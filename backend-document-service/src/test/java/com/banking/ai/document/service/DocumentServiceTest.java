@@ -142,6 +142,24 @@ class DocumentServiceTest {
     }
 
     @Test
+    void summarizesActiveDocumentsByNormalizedCategory() {
+        DocumentMetadata first = new DocumentMetadata();
+        first.setId(1L); first.setTitle("Risk Policy"); first.setDocumentType("PDF");
+        first.setCategory("Risk"); first.setOwnerEmail("manager@bankingai.local");
+        DocumentMetadata second = new DocumentMetadata();
+        second.setId(2L); second.setTitle("Credit Policy"); second.setDocumentType("PDF");
+        second.setCategory(" risk "); second.setOwnerEmail("manager@bankingai.local");
+        when(documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)).thenReturn(List.of(first, second));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getActiveCategorySummary())
+                .singleElement()
+                .extracting("category", "documentCount")
+                .containsExactly("risk", 2L);
+    }
+
+    @Test
     void returnsTheRequestedNumberOfRecentlyUpdatedActiveDocuments() {
         DocumentMetadata newest = new DocumentMetadata();
         newest.setId(1L); newest.setTitle("New Policy"); newest.setDocumentType("PDF");
