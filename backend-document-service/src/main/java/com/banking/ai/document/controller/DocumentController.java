@@ -2,6 +2,7 @@ package com.banking.ai.document.controller;
 
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentCategorySummary;
+import com.banking.ai.document.dto.DocumentOwnerSummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
@@ -63,6 +64,12 @@ public class DocumentController {
     @Operation(summary = "Get active document counts by category")
     public ResponseEntity<List<DocumentCategorySummary>> getActiveCategorySummary() {
         return ResponseEntity.ok(documentService.getActiveCategorySummary());
+    }
+
+    @GetMapping("/active/owners")
+    @Operation(summary = "Get active document counts by owner")
+    public ResponseEntity<List<DocumentOwnerSummary>> getActiveOwnerSummary() {
+        return ResponseEntity.ok(documentService.getActiveOwnerSummary());
     }
 
     @GetMapping("/recent")

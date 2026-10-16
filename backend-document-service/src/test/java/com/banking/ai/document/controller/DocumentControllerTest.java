@@ -2,6 +2,7 @@ package com.banking.ai.document.controller;
 
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentCategorySummary;
+import com.banking.ai.document.dto.DocumentOwnerSummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.dto.DocumentSortField;
@@ -128,6 +129,16 @@ class DocumentControllerTest {
         mockMvc.perform(get("/api/documents/active/categories"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].category").value("risk"))
+                .andExpect(jsonPath("$[0].documentCount").value(2));
+    }
+
+    @Test
+    void activeOwnerSummaryReturnsOwnerCounts() throws Exception {
+        when(documentService.getActiveOwnerSummary()).thenReturn(List.of(new DocumentOwnerSummary("manager@bankingai.local", 2L)));
+
+        mockMvc.perform(get("/api/documents/active/owners"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].ownerEmail").value("manager@bankingai.local"))
                 .andExpect(jsonPath("$[0].documentCount").value(2));
     }
 

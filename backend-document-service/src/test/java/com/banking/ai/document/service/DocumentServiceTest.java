@@ -160,6 +160,24 @@ class DocumentServiceTest {
     }
 
     @Test
+    void summarizesActiveDocumentsByNormalizedOwnerEmail() {
+        DocumentMetadata first = new DocumentMetadata();
+        first.setId(1L); first.setTitle("Risk Policy"); first.setDocumentType("PDF");
+        first.setCategory("risk"); first.setOwnerEmail("Manager@BankingAI.Local");
+        DocumentMetadata second = new DocumentMetadata();
+        second.setId(2L); second.setTitle("Credit Policy"); second.setDocumentType("PDF");
+        second.setCategory("risk"); second.setOwnerEmail(" manager@bankingai.local ");
+        when(documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)).thenReturn(List.of(first, second));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getActiveOwnerSummary())
+                .singleElement()
+                .extracting("ownerEmail", "documentCount")
+                .containsExactly("manager@bankingai.local", 2L);
+    }
+
+    @Test
     void returnsTheRequestedNumberOfRecentlyUpdatedActiveDocuments() {
         DocumentMetadata newest = new DocumentMetadata();
         newest.setId(1L); newest.setTitle("New Policy"); newest.setDocumentType("PDF");

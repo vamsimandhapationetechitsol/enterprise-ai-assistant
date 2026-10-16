@@ -2,6 +2,7 @@ package com.banking.ai.document.service;
 
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentCategorySummary;
+import com.banking.ai.document.dto.DocumentOwnerSummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
@@ -20,6 +21,8 @@ public interface DocumentService {
     List<DocumentResponse> getActiveDocuments();
 
     List<DocumentCategorySummary> getActiveCategorySummary();
+
+    List<DocumentOwnerSummary> getActiveOwnerSummary();
 
     List<DocumentResponse> getRecentlyUpdatedDocuments(int limit);
 
