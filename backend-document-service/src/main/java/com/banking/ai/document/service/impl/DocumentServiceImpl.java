@@ -3,6 +3,7 @@ package com.banking.ai.document.service.impl;
 import com.banking.ai.document.dto.DocumentRequest;
 import com.banking.ai.document.dto.DocumentCategorySummary;
 import com.banking.ai.document.dto.DocumentOwnerSummary;
+import com.banking.ai.document.dto.DocumentTypeSummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentSearchRequest;
@@ -94,6 +95,21 @@ public class DocumentServiceImpl implements DocumentService {
                 .entrySet()
                 .stream()
                 .map(entry -> new DocumentOwnerSummary(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DocumentTypeSummary> getActiveTypeSummary() {
+        return documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        document -> document.getDocumentType().trim().toUpperCase(Locale.ROOT),
+                        TreeMap::new,
+                        Collectors.counting()))
+                .entrySet()
+                .stream()
+                .map(entry -> new DocumentTypeSummary(entry.getKey(), entry.getValue()))
                 .toList();
     }
 

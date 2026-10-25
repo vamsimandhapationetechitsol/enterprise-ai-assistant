@@ -52,6 +52,7 @@ This document defines the API contracts and endpoint specifications for BankingA
 | GET | `/active` | List document metadata that has not been archived |
 | GET | `/active/categories` | Get active document counts grouped by category |
 | GET | `/active/owners` | Get active document counts grouped by owner email |
+| GET | `/active/types` | Get active document counts grouped by document type |
 | GET | `/recent?limit={limit}` | List recently updated active document metadata; default limit is 10 |
 | GET | `/tag/{tag}` | List document metadata matching a tag |
 | GET | `/owner/{ownerEmail}` | List document metadata matching an owner email |

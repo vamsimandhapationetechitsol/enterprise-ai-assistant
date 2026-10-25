@@ -3,6 +3,7 @@ package com.banking.ai.document.controller;
 import com.banking.ai.document.dto.DocumentResponse;
 import com.banking.ai.document.dto.DocumentCategorySummary;
 import com.banking.ai.document.dto.DocumentOwnerSummary;
+import com.banking.ai.document.dto.DocumentTypeSummary;
 import com.banking.ai.document.dto.DocumentPageResponse;
 import com.banking.ai.document.dto.DocumentStatusSummary;
 import com.banking.ai.document.dto.DocumentSortField;
@@ -139,6 +140,16 @@ class DocumentControllerTest {
         mockMvc.perform(get("/api/documents/active/owners"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].ownerEmail").value("manager@bankingai.local"))
+                .andExpect(jsonPath("$[0].documentCount").value(2));
+    }
+
+    @Test
+    void activeTypeSummaryReturnsTypeCounts() throws Exception {
+        when(documentService.getActiveTypeSummary()).thenReturn(List.of(new DocumentTypeSummary("PDF", 2L)));
+
+        mockMvc.perform(get("/api/documents/active/types"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].documentType").value("PDF"))
                 .andExpect(jsonPath("$[0].documentCount").value(2));
     }
 
