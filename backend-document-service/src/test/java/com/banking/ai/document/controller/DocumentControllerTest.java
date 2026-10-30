@@ -166,6 +166,18 @@ class DocumentControllerTest {
     }
 
     @Test
+    void archivedRecentEndpointReturnsArchivedDocuments() throws Exception {
+        DocumentResponse response = new DocumentResponse(
+                1L, "Archived Policy", "PDF", "policy", "manager@bankingai.local",
+                "Archived content", List.of("policy"), DocumentMetadata.Status.ARCHIVED, null, null);
+        when(documentService.getRecentlyArchivedDocuments(1)).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/documents/archived/recent").param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("ARCHIVED"));
+    }
+
+    @Test
     void tagEndpointReturnsMatchingDocuments() throws Exception {
         DocumentResponse response = new DocumentResponse(
                 1L, "Risk Assessment", "PDF", "risk", "manager@bankingai.local",

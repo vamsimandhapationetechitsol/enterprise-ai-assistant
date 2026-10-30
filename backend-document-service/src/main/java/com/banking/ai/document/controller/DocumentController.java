@@ -86,6 +86,13 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getRecentlyUpdatedDocuments(limit));
     }
 
+    @GetMapping("/archived/recent")
+    @Operation(summary = "List recently archived document metadata")
+    public ResponseEntity<List<DocumentResponse>> getRecentlyArchivedDocuments(
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int limit) {
+        return ResponseEntity.ok(documentService.getRecentlyArchivedDocuments(limit));
+    }
+
     @GetMapping("/tag/{tag}")
     @Operation(summary = "List document metadata by tag")
     public ResponseEntity<List<DocumentResponse>> getDocumentsByTag(@PathVariable String tag) {

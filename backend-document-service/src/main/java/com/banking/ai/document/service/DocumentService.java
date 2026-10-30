@@ -29,6 +29,8 @@ public interface DocumentService {
 
     List<DocumentResponse> getRecentlyUpdatedDocuments(int limit);
 
+    List<DocumentResponse> getRecentlyArchivedDocuments(int limit);
+
     List<DocumentResponse> getDocumentsByTag(String tag);
 
     List<DocumentResponse> getDocumentsByOwner(String ownerEmail);

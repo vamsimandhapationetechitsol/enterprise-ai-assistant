@@ -217,6 +217,27 @@ class DocumentServiceTest {
     }
 
     @Test
+    void returnsTheRequestedNumberOfRecentlyArchivedDocuments() {
+        DocumentMetadata newest = new DocumentMetadata();
+        newest.setId(1L); newest.setTitle("Archived Policy"); newest.setDocumentType("PDF");
+        newest.setCategory("policy"); newest.setOwnerEmail("manager@bankingai.local");
+        newest.setStatus(DocumentMetadata.Status.ARCHIVED);
+        DocumentMetadata older = new DocumentMetadata();
+        older.setId(2L); older.setTitle("Older Archived Policy"); older.setDocumentType("PDF");
+        older.setCategory("policy"); older.setOwnerEmail("manager@bankingai.local");
+        older.setStatus(DocumentMetadata.Status.ARCHIVED);
+        when(documentRepository.findByStatusOrderByUpdatedDateDesc(DocumentMetadata.Status.ARCHIVED))
+                .thenReturn(List.of(newest, older));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getRecentlyArchivedDocuments(1))
+                .singleElement()
+                .extracting("title", "status")
+                .containsExactly("Archived Policy", DocumentMetadata.Status.ARCHIVED);
+    }
+
+    @Test
     void filtersDocumentsByCategoryWhenRequested() {
         DocumentMetadata document = new DocumentMetadata();
         document.setId(1L);

@@ -13,6 +13,8 @@ public interface DocumentRepository extends JpaRepository<DocumentMetadata, Long
 
     List<DocumentMetadata> findByStatusNotOrderByUpdatedDateDesc(DocumentMetadata.Status status);
 
+    List<DocumentMetadata> findByStatusOrderByUpdatedDateDesc(DocumentMetadata.Status status);
+
     List<DocumentMetadata> findByCategoryIgnoreCase(String category);
 
     List<DocumentMetadata> findByStatusAndCategoryIgnoreCase(DocumentMetadata.Status status, String category);
