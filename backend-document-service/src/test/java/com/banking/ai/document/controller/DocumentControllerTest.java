@@ -134,6 +134,16 @@ class DocumentControllerTest {
     }
 
     @Test
+    void archivedCategorySummaryReturnsCategoryCounts() throws Exception {
+        when(documentService.getArchivedCategorySummary()).thenReturn(List.of(new DocumentCategorySummary("risk", 2L)));
+
+        mockMvc.perform(get("/api/documents/archived/categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].category").value("risk"))
+                .andExpect(jsonPath("$[0].documentCount").value(2));
+    }
+
+    @Test
     void activeOwnerSummaryReturnsOwnerCounts() throws Exception {
         when(documentService.getActiveOwnerSummary()).thenReturn(List.of(new DocumentOwnerSummary("manager@bankingai.local", 2L)));
 

@@ -23,6 +23,8 @@ public interface DocumentService {
 
     List<DocumentCategorySummary> getActiveCategorySummary();
 
+    List<DocumentCategorySummary> getArchivedCategorySummary();
+
     List<DocumentOwnerSummary> getActiveOwnerSummary();
 
     List<DocumentTypeSummary> getActiveTypeSummary();

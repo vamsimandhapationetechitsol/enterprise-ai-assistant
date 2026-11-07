@@ -160,6 +160,26 @@ class DocumentServiceTest {
     }
 
     @Test
+    void summarizesArchivedDocumentsByNormalizedCategory() {
+        DocumentMetadata first = new DocumentMetadata();
+        first.setId(1L); first.setTitle("Archived Risk Policy"); first.setDocumentType("PDF");
+        first.setCategory("Risk"); first.setOwnerEmail("manager@bankingai.local");
+        first.setStatus(DocumentMetadata.Status.ARCHIVED);
+        DocumentMetadata second = new DocumentMetadata();
+        second.setId(2L); second.setTitle("Archived Credit Policy"); second.setDocumentType("PDF");
+        second.setCategory(" risk "); second.setOwnerEmail("manager@bankingai.local");
+        second.setStatus(DocumentMetadata.Status.ARCHIVED);
+        when(documentRepository.findByStatus(DocumentMetadata.Status.ARCHIVED)).thenReturn(List.of(first, second));
+
+        DocumentService service = new DocumentServiceImpl(documentRepository);
+
+        assertThat(service.getArchivedCategorySummary())
+                .singleElement()
+                .extracting("category", "documentCount")
+                .containsExactly("risk", 2L);
+    }
+
+    @Test
     void summarizesActiveDocumentsByNormalizedOwnerEmail() {
         DocumentMetadata first = new DocumentMetadata();
         first.setId(1L); first.setTitle("Risk Policy"); first.setDocumentType("PDF");
