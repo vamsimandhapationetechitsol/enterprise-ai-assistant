@@ -27,6 +27,8 @@ public interface DocumentService {
 
     List<DocumentOwnerSummary> getActiveOwnerSummary();
 
+    List<DocumentOwnerSummary> getArchivedOwnerSummary();
+
     List<DocumentTypeSummary> getActiveTypeSummary();
 
     List<DocumentResponse> getRecentlyUpdatedDocuments(int limit);

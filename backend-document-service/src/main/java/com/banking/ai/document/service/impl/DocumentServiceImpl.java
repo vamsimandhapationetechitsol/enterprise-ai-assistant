@@ -115,6 +115,17 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<DocumentOwnerSummary> getArchivedOwnerSummary() {
+        return documentRepository.findByStatus(DocumentMetadata.Status.ARCHIVED)
+                .stream()
+                .collect(Collectors.groupingBy(document -> document.getOwnerEmail().trim().toLowerCase(Locale.ROOT), TreeMap::new, Collectors.counting()))
+                .entrySet().stream()
+                .map(entry -> new DocumentOwnerSummary(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<DocumentTypeSummary> getActiveTypeSummary() {
         return documentRepository.findByStatusNot(DocumentMetadata.Status.ARCHIVED)
                 .stream()

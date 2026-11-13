@@ -79,6 +79,12 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getActiveOwnerSummary());
     }
 
+    @GetMapping("/archived/owners")
+    @Operation(summary = "Get archived document counts by owner")
+    public ResponseEntity<List<DocumentOwnerSummary>> getArchivedOwnerSummary() {
+        return ResponseEntity.ok(documentService.getArchivedOwnerSummary());
+    }
+
     @GetMapping("/active/types")
     @Operation(summary = "Get active document counts by document type")
     public ResponseEntity<List<DocumentTypeSummary>> getActiveTypeSummary() {
